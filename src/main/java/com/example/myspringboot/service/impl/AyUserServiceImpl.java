@@ -64,6 +64,7 @@ public class AyUserServiceImpl implements AyUserService {
 //        String error = null;
 //        error.split("/");
 //        return saveUser;
+        redisTemplate.opsForList().leftPush(ALL_USER,ayUser);
         return ayUserRepository.save(ayUser);
     }
 
@@ -71,6 +72,7 @@ public class AyUserServiceImpl implements AyUserService {
     public void delete(String id) {
         ayUserRepository.deleteById(id);
         logger.info("userId:" + id +"用户被删除");
+        redisTemplate.opsForList().remove(ALL_USER,0,ayUserRepository.findById(id));
     }
 
     @Override
