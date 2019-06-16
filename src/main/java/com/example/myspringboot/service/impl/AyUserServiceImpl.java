@@ -1,5 +1,6 @@
 package com.example.myspringboot.service.impl;
 
+import com.example.myspringboot.dao.AyUserDao;
 import com.example.myspringboot.model.AyUser;
 import com.example.myspringboot.repository.AyUserRepository;
 import com.example.myspringboot.service.AyUserService;
@@ -24,6 +25,9 @@ public class AyUserServiceImpl implements AyUserService {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private AyUserDao ayUserDao;
 
     private static final String ALL_USER = "ALL_USER_LIST";
 
@@ -93,5 +97,10 @@ public class AyUserServiceImpl implements AyUserService {
     @Override
     public List<AyUser> findByIdIn(Collection<String> ids) {
         return ayUserRepository.findByIdIn(ids);
+    }
+
+    @Override
+    public AyUser findByNameAndPassword(String name, String password) {
+        return ayUserDao.findByNameAndPassword(name,password);
     }
 }

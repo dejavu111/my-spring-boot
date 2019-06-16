@@ -2,6 +2,8 @@ package com.example.myspringboot;
 
 import com.example.myspringboot.model.AyUser;
 import com.example.myspringboot.service.AyUserService;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -114,6 +116,20 @@ public class MySpringBootApplicationTests {
         System.out.println("---->>id:"+ayUser2.getId()+"name"+ayUser2.getName());
         redisUserSize = redisTemplate.opsForList().size("ALL_USER_LIST");
         System.out.println("目前缓存中的用户数量为："+redisUserSize);
+    }
+
+    Logger logger = LogManager.getLogger(this.getClass());
+
+    @Test
+    public void testLog4j(){
+        ayUserService.delete("3");
+        logger.info("delete success!!!");
+    }
+
+    @Test
+    public void testMybatis() {
+        AyUser ayUser = ayUserService.findByNameAndPassword("阿毅","123456");
+        logger.info(ayUser.getId() + ayUser.getName());
     }
 }
 

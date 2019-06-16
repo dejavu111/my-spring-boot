@@ -1,26 +1,28 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <!-- 指定日志的输出格式-->
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n" />
+            <!-- 设置日志输出的格式 -->
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
         </Console>
-        <RollingFile name="RollingFileInfo" fileName="D:/info.log" filePatern="D:/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
+        <RollingFile name="RollingFileInfo" fileName="D:/info.log"
+                     filePattern="D:/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
             <Filters>
-                <ThresholdFilter level="INFO" />
+                <ThresholdFilter level="INFO"/>
             </Filters>
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}][%p] - %l -%m%n" />
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy />
-                <SizeBasedTriggerPolicy size="100 MB" />
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
             </Policies>
         </RollingFile>
     </appenders>
+
     <loggers>
         <root level="all">
-            <!-- 控制台输出 -->
-            <appender-ref ref="Console" />
-            <appender-ref ref="RollingFileInfo" />
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFileInfo"/>
         </root>
     </loggers>
+
 </Configuration>

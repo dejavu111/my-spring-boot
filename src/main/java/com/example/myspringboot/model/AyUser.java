@@ -21,6 +21,19 @@ public class AyUser implements Serializable {
     //密码
     private String password;
 
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    private String mail;
+
+    public AyUser() {
+    }
+
     public String getId() {
         return id;
     }
