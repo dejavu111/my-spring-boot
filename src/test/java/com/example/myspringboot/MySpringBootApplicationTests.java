@@ -1,7 +1,11 @@
 package com.example.myspringboot;
 
+import com.example.myspringboot.model.AyMood;
 import com.example.myspringboot.model.AyUser;
+import com.example.myspringboot.mq.AyMoodProducer;
+import com.example.myspringboot.service.AyMoodService;
 import com.example.myspringboot.service.AyUserService;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -15,8 +19,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import javax.jms.Destination;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,6 +35,9 @@ public class MySpringBootApplicationTests {
 
     @Resource
     private AyUserService ayUserService;
+
+    @Resource
+    private AyMoodService ayMoodService;
 
     @Test
     public void testRepository(){
@@ -131,5 +141,73 @@ public class MySpringBootApplicationTests {
         AyUser ayUser = ayUserService.findByNameAndPassword("阿毅","123456");
         logger.info(ayUser.getId() + ayUser.getName());
     }
+
+    @Test
+    public void testAyMood() {
+        AyMood ayMood = new AyMood();
+        ayMood.setId("1");
+        ayMood.setUserId("1");
+        ayMood.setPraiseNum(0);
+        ayMood.setContent("这");
+        ayMood.setPublishTime(new Date());
+        AyMood mood = ayMoodService.save(ayMood);
+    }
+
+    @Resource
+    private AyMoodProducer ayMoodProducer;
+
+    @Test
+    public void testActiveMQQueue() {
+        Destination destination = new ActiveMQQueue("ay.queue");
+        ayMoodProducer.sendMessage(destination,"hello,mq!");
+    }
+
+    @Test
+    public void testActiveMQAsynSave() {
+        AyMood ayMood = new AyMood();
+        ayMood.setId("2");
+        ayMood.setUserId("2");
+        ayMood.setPraiseNum(0);
+        ayMood.setContent("这是我的第一条微信说说");
+        ayMood.setPublishTime(new Date());
+        String msg = ayMoodService.asynSave(ayMood);
+        System.out.println("异步发表说说" + msg);
+    }
+
+    @Test
+    public void testAysn() {
+        long startTime = System.currentTimeMillis();
+        System.out.println("第1次查询所有用户");
+        List<AyUser> ayUserList = ayUserService.findAll();
+        System.out.println("第2次查询所有用户");
+        List<AyUser> ayUserList2 = ayUserService.findAll();
+        System.out.println("第3次查询所有用户");
+        List<AyUser> ayUserList3 = ayUserService.findAll();
+        long endTime = System.currentTimeMillis();
+        System.out.println("总共耗时" + (endTime - startTime) + "毫秒");
+
+    }
+
+    @Test
+    public void testAsync2() throws Exception {
+        long startTime = System.currentTimeMillis();
+        System.out.println("第1次查询所有用户");
+        Future<List<AyUser>> ayUserList = ayUserService.findAsynAll();
+        System.out.println("第2次查询所有用户");
+        Future<List<AyUser>> ayUserList2 = ayUserService.findAsynAll();
+        System.out.println("第3次查询所有用户");
+        Future<List<AyUser>> ayUserList3 = ayUserService.findAsynAll();
+        while(true) {
+            if(ayUserList.isDone() && ayUserList2.isDone() && ayUserList3.isDone()) {
+                break;
+            } else {
+                Thread.sleep(10);
+            }
+
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("共消耗" + (endTime - startTime) + "毫秒");
+    }
+
 }
 
