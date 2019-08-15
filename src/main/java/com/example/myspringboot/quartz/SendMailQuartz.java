@@ -23,8 +23,8 @@ public class SendMailQuartz {
     private static final Logger logger = LogManager.getLogger(SendMailQuartz.class);
 
     // 每5秒钟执行一次
-    @Scheduled(cron = "*/5 * * * * *")
-    public void reportCurrentByCron() {
-        logger.info("定时器运行了！！！");
-    }
+//    @Scheduled(cron = "*/5 * * * * *")
+//    public void reportCurrentByCron() {
+//        logger.info("定时器运行了！！！");
+//    }
 }

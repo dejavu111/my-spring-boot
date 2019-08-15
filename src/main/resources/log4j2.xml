@@ -18,8 +18,9 @@
         </RollingFile>
     </appenders>
 
+    <!--控制台日志级别-->
     <loggers>
-        <root level="all">
+        <root level="info">
             <appender-ref ref="Console"/>
             <appender-ref ref="RollingFileInfo"/>
         </root>
