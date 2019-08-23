@@ -30,4 +30,6 @@ public interface AyUserService {
 
     Future<List<AyUser>> findAsynAll();
 
+    AyUser findByNameAndPasswordRetry(String name,String password);
+
 }
